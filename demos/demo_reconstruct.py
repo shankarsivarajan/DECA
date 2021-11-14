@@ -85,6 +85,11 @@ def main(args):
                 if args.render_orig:
                     image = util.tensor2image(orig_visdict[vis_name][0])
                     cv2.imwrite(os.path.join(savefolder, name, 'orig_' + name + '_' + vis_name +'.jpg'), util.tensor2image(orig_visdict[vis_name][0]))
+                    
+        if args.saveParams:
+            for params in ['shape', 'exp', 'pose']:
+                np.savetxt(os.path.join(savefolder, name, name + f'_params_{params}.txt'), codedict[params].cpu().numpy())
+                
     print(f'-- please check the results in {savefolder}')
         
 if __name__ == '__main__':
@@ -123,4 +128,8 @@ if __name__ == '__main__':
                         help='whether to save outputs as .mat' )
     parser.add_argument('--saveImages', default=False, type=lambda x: x.lower() in ['true', '1'],
                         help='whether to save visualization output as seperate images' )
+    
+    parser.add_argument('--saveParams', default=True, type=lambda x: x.lower() in ['true', '1'],
+                        help='whether to save the FLAME parameters' )
+
     main(parser.parse_args())
